@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <math.h>
 #include <sys/time.h>
+#include <thread>
 using namespace std;
 
 long double f (long int n){
@@ -10,8 +11,7 @@ long double f (long int n){
 
 long double ln (long double x, bool useThread){
     timeval time1,time2;
-    long double result = 0;
-    long double n = 0;
+    long double result = 0, n = 0;
 
     //Comienza el conteo del tiempo
     gettimeofday(&time1, NULL);

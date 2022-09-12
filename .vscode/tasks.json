@@ -3,14 +3,14 @@
 	"tasks": [
 		{
 			"type": "cppbuild",
-			"label": "Compilar C++",
+			"label": "C/C++: g++.exe compilar archivo activo",
 			"command": "D:\\Temp\\bin\\g++.exe",
 			"args": [
 				"-fdiagnostics-color=always",
+				"-pthread",
 				"-g",
 				"${file}",
 				"-o",
-				"-pthread",
 				"${fileDirname}\\${fileBasenameNoExtension}.exe"
 			],
 			"options": {
@@ -21,16 +21,6 @@
 			],
 			"group": "build",
 			"detail": "compilador: D:\\Temp\\bin\\g++.exe"
-		},
-		{
-			"label": "Ejecutar C++",
-			"command": "./${fileBasenameNoExtension}.exe",
-			"dependsOn": "Compilar C++",
-			"problemMatcher": [],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
 		}
 	]
 }
