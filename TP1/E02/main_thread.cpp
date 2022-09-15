@@ -21,6 +21,7 @@ int main () {
     ifstream patrones, texto;
     string buffer;
     string patterns[32];
+    thread aThreads[32];
 
     //open files
     patrones.open("patrones.txt");
@@ -41,8 +42,15 @@ int main () {
     gettimeofday(&time1, NULL);
     //search
     for (int i = 0; i < 32; i++){
-        thread hilo(search, i, patterns[i], buffer);
-        //search(i, patterns[i], buffer);
+        aThreads[i] = thread(search, i, patterns[i], buffer);
+    }
+    
+    //Espera la ejecucion de los hilos
+    for (int n = 0; n < 32; n++){
+    	if(aThreads[n].joinable() == true){
+    		aThreads[n].join();
+    	}
+    	//cout << result << endl;
     }
     //stop timer
     gettimeofday(&time2, NULL);
