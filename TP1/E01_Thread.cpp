@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <math.h>
 #include <sys/time.h>
-#include <thread>
+#include <thread.h>
 using namespace std;
 
 long double result = 0;

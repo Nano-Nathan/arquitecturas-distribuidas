@@ -5,16 +5,15 @@
 using namespace std;
 
 
-int search(string patron, string texto){
+void search(int idx, string patron, string texto){
     int count = 0;
-    int exist;
-    for (int i = 0; i < patron.length(); i++){
-        exist = texto.find(patron, i);
-        if(exist != string::npos){
-            count += 1;
-        }
+    int i = texto.find(patron);
+    while (i != string::npos){
+        count += 1;
+        i = texto.find(patron, i + 1);
     }
-    return count;
+
+    cout << "El patron " << idx << " aparece " << count << " veces." << endl;
 }
 
 int main () {
@@ -42,7 +41,7 @@ int main () {
     gettimeofday(&time1, NULL);
     //search
     for (int i = 0; i < 32; i++){
-        cout << "El patron " << patterns[i] << " se repite " << search(patterns[i], buffer) << " veces." << endl;
+        search(i, patterns[i], buffer);
     }
     //stop timer
     gettimeofday(&time2, NULL);
