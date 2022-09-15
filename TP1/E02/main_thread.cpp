@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <sys/time.h>
+#include <thread>
 
 using namespace std;
 
@@ -12,7 +13,6 @@ void search(int idx, string patron, string texto){
         count += 1;
         i = texto.find(patron, i + 1);
     }
-
     cout << "El patron " << idx << " aparece " << count << " veces." << endl;
 }
 
@@ -41,7 +41,8 @@ int main () {
     gettimeofday(&time1, NULL);
     //search
     for (int i = 0; i < 32; i++){
-        search(i, patterns[i], buffer);
+        thread hilo(search, i, patterns[i], buffer);
+        //search(i, patterns[i], buffer);
     }
     //stop timer
     gettimeofday(&time2, NULL);
