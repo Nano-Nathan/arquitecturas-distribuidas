@@ -10,8 +10,17 @@ using namespace std;
 
 //Inicializacion del vector de numeros primos
 vector<long long int> primos{2, 3, 5, 7};
+long long int vector_size;
 
+//Cantidad de hilos
+int const thread_count = 12;
+
+//Rangos para cada hilo
+pair<long long int, long long int> ranges[thread_count];
+
+//Variables de control
 mutex locker;
+const int max_itera = 4;
 
 void printVector(vector<long long int> &vec){
     for (const auto &item : vec) {
@@ -20,75 +29,89 @@ void printVector(vector<long long int> &vec){
     cout << endl;
 }
 
-void validate (int i, long long int start, long long int end, long long int primos_size) {
+bool esPrimo (long long int number) {
+	bool es_primo = true;
+    int i = 0;
+    while (i < vector_size && es_primo){
+		//Mientras el resto de la division no es 0, es primo
+		es_primo = (number % primos.at(i)) != 0;
+        i++;
+    }
+	//Retorna el valor
+	return es_primo;
+}
+
+void validate (int thread_idx) {
+	long long int current_number = ranges[thread_idx].first;
+	bool es_primo;
 	//Recorro el rango que le ha sido asignado
-	while (start < end) {
-		//Variables de control
-		int i = 0;
-		bool es_primo = true;
-		//Valido que sea divisible por todos los primos < sqrt(K)
-		for (const auto primo : primos) {
-			//Mientras el resto de la division sea distinta de 0, es primo
-			es_primo = (start % primo) != 0;
-			if(!es_primo){
-				break;
-			}
-	    }
+	while (current_number < ranges[thread_idx].second) {
+		//Valida si es primo
+		es_primo = esPrimo(current_number);
 		//Si es primo, lo agrega a la lista
 		if(es_primo){
 			locker.lock();
-			primos.push_back(start);
+			primos.push_back(current_number);
 			locker.unlock();
 		}
 		//Valida el siguiente numero del rango
-		start ++;
+		current_number ++;
 	}
 }
 
 int main () {
-	
-	//Rango minimo a analizar
-	long long int init = 10;
-	//Rango maximo a analizar
-	long long int limit = 1000000;
-	
-	//Maximo ingresado por el usuario
-	long long max = 1000;
-	
-	//Cantidad de hilos
-	int thread_count = 64;
-	//Array de hilos
-	thread thread_array[thread_count];
-	
-	//Variables de control
-	int max_itera = 2, i = 0;
+	long long int range, thread_range, start_range, end_range, extra,
+	//Inicio del rango a analizar
+	init = 10,
+	//Fin del rango a analizar
+	limit = 100,
+	//Limite del usuario
+	maximum;
+	cout << "Ingrese un maximo: ";
+	cin >> maximum;
+
+    //Array de hilos
+    thread thread_array[thread_count];
 
 	//Realiza el calculo
-	while (i < max_itera){
+	int i = 0;
+	while ((i < max_itera) && init < maximum){
+		//Si el limite es mayor al maximo ingresado por el usuario
+		if(limit > maximum){
+			//Acota el intervalo
+			limit = maximum;
+		}
+		
 		//Rango de busqueda
-		long long int range = limit - init,
-			//Rango para cada hilo
-			validate_range = range / thread_count,
-			//Inicio del rango actual
-			init_current_range = init,
-			//Cantidad de numeros que quedaron fuera del rango
-			extra = range % thread_count;
+		range = limit - init;
+		//Rango para cada hilo
+		thread_range = range / thread_count;
+		//Cantidad de numeros que quedaron fuera del rango
+		extra = range % thread_count;
+		//Inicio del rango actual
+		start_range = init;
+		//Fin del rango actual
+		end_range = init + thread_range;
+
+		//Longitud del vector en el momento
+		vector_size = primos.size();
 
 		//Creo los hilos
 		for (int i = 0; i < thread_count; i++){
-			//Inicio del proximo rango
-			long long int init_next_range = init_current_range + validate_range,
-				//Longitud del vector en el momento
-				primos_size = primos.size();
+			//Si quedaron numeros por fuera, lo indica
 			if(extra > 0){
-				init_next_range ++;
+				end_range ++;
 				extra --;
 			}
+			//Guarda los rangos
+			ranges[i].first = start_range;
+			ranges[i].second = end_range;
 			//Creo el hilo
-			thread_array[i] = thread(validate, i, init_current_range, init_next_range, primos_size);
+			thread_array[i] = thread(validate, i);
 			
 			//Avanzo al proximo rango de hilos
-			init_current_range = init_next_range;
+			start_range = end_range;
+			end_range += thread_range;
 		}
 
 		//Espero la ejecucion de los hilos
@@ -97,8 +120,6 @@ int main () {
 				thread_array[i].join();
 			}
 		}
-		//Muestra los numeros primos encontrados
-		printVector(primos);
 		
 		//El final ahora es el inicio
 		init = limit;
@@ -106,5 +127,15 @@ int main () {
 		limit = pow(init, 2);
 		i++;
 	}
+
+    //Muestra los numeros primos encontrados
+    sort(primos.begin(), primos.end());
+    long long int size_total = primos.size();
+    cout << "Cantidad de numeros primos: " << size_total << endl;
+    cout << "Ultimos 5 primos: " << endl;
+    for (int i = size_total - 5; i < size_total; i++){
+        cout << primos.at(i) << ", ";
+    }
+    cout << endl;
     return 0;
 }
