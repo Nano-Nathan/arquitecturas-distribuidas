@@ -13,7 +13,7 @@ vector<long long int> primos{2, 3, 5, 7};
 long long int vector_size;
 
 //Cantidad de hilos
-int const thread_count = 12;
+int const thread_count = 32;
 
 //Rangos para cada hilo
 pair<long long int, long long int> ranges[thread_count];
