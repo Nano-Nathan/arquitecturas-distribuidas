@@ -1,10 +1,10 @@
 #include <iostream>
 #include <math.h>
-#include <cmath>
 #include <vector>
 #include <thread>
 #include <mutex>
 #include <algorithm>
+#include <sys/time.h>
 
 using namespace std;
 
@@ -21,13 +21,6 @@ pair<long long int, long long int> ranges[thread_count];
 //Variables de control
 mutex locker;
 const int max_itera = 4;
-
-void printVector(vector<long long int> &vec){
-    for (const auto &item : vec) {
-        cout << item << ", ";
-    }
-    cout << endl;
-}
 
 bool esPrimo (long long int number) {
 	bool es_primo = true;
@@ -60,6 +53,7 @@ void validate (int thread_idx) {
 }
 
 int main () {
+	timeval time1,time2;
 	long long int range, thread_range, start_range, end_range, extra,
 	//Inicio del rango a analizar
 	init = 10,
@@ -73,6 +67,8 @@ int main () {
     //Array de hilos
     thread thread_array[thread_count];
 
+	//start timer
+	gettimeofday(&time1, NULL);
 	//Realiza el calculo
 	int i = 0;
 	while ((i < max_itera) && init < maximum){
@@ -127,15 +123,18 @@ int main () {
 		limit = pow(init, 2);
 		i++;
 	}
-
+	//stop timer
+    gettimeofday(&time2, NULL);
     //Muestra los numeros primos encontrados
     sort(primos.begin(), primos.end());
     long long int size_total = primos.size();
-    cout << "Cantidad de numeros primos: " << size_total << endl;
+    cout << endl << "Cantidad de numeros primos: " << size_total << endl << endl;
     cout << "Ultimos 5 primos: " << endl;
     for (int i = size_total - 5; i < size_total; i++){
         cout << primos.at(i) << ", ";
     }
-    cout << endl;
+    cout << endl << endl;
+	//shows the execution time
+    cout << "Tiempo de ejecucion: " << double(time2.tv_sec - time1.tv_sec) + double(time2.tv_usec - time1.tv_usec)/1000000 << endl;
     return 0;
 }
