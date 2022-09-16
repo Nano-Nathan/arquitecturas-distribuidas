@@ -3,12 +3,15 @@
 #include <cmath>
 #include <vector>
 #include <thread>
+#include <mutex>
 #include <algorithm>
 
 using namespace std;
 
 //Inicializacion del vector de numeros primos
 vector<long long int> primos{2, 3, 5, 7};
+
+mutex locker;
 
 void printVector(vector<long long int> &vec){
     for (const auto &item : vec) {
@@ -33,7 +36,9 @@ void validate (int i, long long int start, long long int end, long long int prim
 	    }
 		//Si es primo, lo agrega a la lista
 		if(es_primo){
+			locker.lock();
 			primos.push_back(start);
+			locker.unlock();
 		}
 		//Valida el siguiente numero del rango
 		start ++;
@@ -45,7 +50,7 @@ int main () {
 	//Rango minimo a analizar
 	long long int init = 10;
 	//Rango maximo a analizar
-	long long int limit = 100;
+	long long int limit = 1000000;
 	
 	//Maximo ingresado por el usuario
 	long long max = 1000;
@@ -56,7 +61,7 @@ int main () {
 	thread thread_array[thread_count];
 	
 	//Variables de control
-	int max_itera = 1, i = 0;
+	int max_itera = 2, i = 0;
 
 	//Realiza el calculo
 	while (i < max_itera){
