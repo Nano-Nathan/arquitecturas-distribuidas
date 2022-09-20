@@ -1,59 +1,54 @@
 #include <iostream>
-#include <cmath>
 #include <mutex>
+#include <algorithm>
 #include <thread>
 #include <sys/time.h>
 
 using namespace std;
 
 const int n = 3000;
+const int thread_count = 32;
+
+//Rangos para cada hilo
+pair<int, int> ranges[thread_count];
 
 float matriz_1[n][n];
 float matriz_2[n][n];
 float result[n][n];
 float suma_total;
-mutex await;
+mutex locker;
 
-void multiplicate (int start, int end) {
-	//float local_result[n][end-start];
-	float local_total = 0;
+void multiplicate (int thread_idx) {
+	//Suma total de las columnas asignadas
+	float local_total = 0,
+		//Suma parcial de la multiplicacion
+		partial_result;
 	//Recorro las columnas de la matriz 2
-	for (int i = start; i < end; i++){
+	for (int i = ranges[thread_idx].first; i < ranges[thread_idx].second; i++){
 		//Recorro las filas de la matriz 1
 		for(int j = 0; j < n; j++){
-			float partial_result = 0;
+			partial_result = 0;
 			//Recorro las columnas de la matriz 1 y las filas de la matriz 2
 			for (int k = 0; k < n; k++){
 				//Realizo el calculo
 				partial_result += (matriz_1[j][k] * matriz_2[k][i]);
 			}
 			//Guardo el resultado
-			await.lock();
+			locker.lock();
 			result[j][i] = partial_result;
-			await.unlock();
+			locker.unlock();
 			//Sumo el total local
 			local_total += partial_result;
 		}
 	}
+	locker.lock();
 	suma_total += local_total;
-
-	//Bloquea a los demas hilos
-	//await.lock();
-	//Recorro las columnas de la matriz
-	//for (int i = start; i < end; i++){
-	//	//Recorro las filas de la matriz
-	//	for(int j = 0; j < n; j++){
-	//		//Guardo el resultado
-	//		result[j][i] = local_result[j][i - start];
-	//	}
-	//}
-	//await.unlock();
-	//Sumo al total
+	locker.unlock();
 }
 
 int main () {
 	timeval time1,time2;
-	int cant_thread = 32;
+	thread thread_array[thread_count];
 
     //inicializo las matrices
     for (int i = 0; i < n; i++){
@@ -63,27 +58,43 @@ int main () {
         }
     }
 
+	//Divido los calculos que realizara cada thread
+	int thread_range = n / thread_count,
+		extra = n % thread_count,
+		start_range = 0,
+		end_range = thread_range;
+	
 	//start timer
     gettimeofday(&time1, NULL);
-
-	//Divido los calculos que realizara cada thread
-	int count_col = round(n / cant_thread),
-		extra = n % cant_thread,
-		i = 0;
+	
 	//Creo los hilos
-	for (int j = 0; j < cant_thread; j++){
-		int newValue = i + count_col;
+	for (int i = 0; i < thread_count; i++){
 		//Si sobran columnas, se agrega una a cada thread hasta terminar
 		if(extra > 0){
-			newValue++;
+			end_range++;
 			extra--;
 		}
-		if(newValue > n){
-			thread(multiplicate, i, n);
+		//Inicio del rango
+		ranges[i].first = start_range;
+		//Si el rango es mayor al tamaño de las matrices, acota el intervalo
+		if(end_range > n){
+			ranges[i].second = n;
 		} else {
-			thread(multiplicate, i, newValue);
+			ranges[i].second = end_range;
 		}
-		i = newValue;
+		//Creo el hilo
+		thread_array[i] = thread(multiplicate, i);
+
+		//Paso al siguiente rango
+		start_range = end_range;
+		end_range += thread_range;
+	}
+
+	//Espero la ejecucion de los hilos
+	for (int i = 0; i < thread_count; i++){
+		if(thread_array[i].joinable() == true){
+			thread_array[i].join();
+		}
 	}
 
 	//stop timer
