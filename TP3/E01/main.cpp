@@ -1,16 +1,9 @@
-/******************************************
-La función obtener_IP(char *respuesta) obtiene la dirección IP local
-Para ello, se conecta a un servidor http conocido (IP de uncuyo.edu.ar), puerto 80.
-Luego obtiene la IP local. 
-Recibe como argumento un puntero que apunta a un array de char en donde se depositará la respuesta. 
-*******************************************/
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
 #include <iostream>
-
 
 using namespace std;
 
