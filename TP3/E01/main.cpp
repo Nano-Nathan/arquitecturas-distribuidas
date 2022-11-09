@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 #include <iostream>
+#include <mpi.h>
 
 using namespace std;
 
@@ -28,8 +29,28 @@ void obtener_IP(char *respuesta){
 }
 
 int main () {
-	char ip[20];
+	char ip[20], name[100];
+	int rank, size, length;
+
+
+	//init mpi
+	if(MPI_Init(NULL, NULL)!=MPI_SUCCESS){
+		cout<<"Error iniciando MPI"<<endl;
+		exit(1);
+	}
+
+	//get rank, size, ip and processor name
+	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+	MPI_Comm_size(MPI_COMM_WORLD,&size);
+	MPI_Get_processor_name(name,&length);
 	obtener_IP(ip);
-	cout << ip << endl;
+	
+	//getName
+	cout << "Hola Mundo! soy el proceso " << rank << " de " << size << " corriendo en la máquina " << name <<" IP = " << ip << endl;
+
+	if(MPI_Finalize()!=MPI_SUCCESS){
+		cout<<"Error finalizando MPI"<<endl;
+		exit(1);
+	}
 	return 0;
 }
