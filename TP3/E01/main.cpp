@@ -28,8 +28,8 @@ void obtener_IP(char *respuesta){
 }
 
 int main () {
-	char ip;
-	obtener_IP(&ip);
+	char ip[20];
+	obtener_IP(ip);
 	cout << ip << endl;
 	return 0;
 }
