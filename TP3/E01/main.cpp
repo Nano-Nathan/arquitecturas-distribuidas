@@ -1,37 +1,46 @@
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <arpa/inet.h>
 #include <iostream>
+#include <iomanip>
+#include <math.h>
+#include <sys/time.h>
 #include <mpi.h>
-
 using namespace std;
 
-void obtener_IP(char *respuesta){  
-	int mi_socket=socket(AF_INET,SOCK_STREAM,0);
-	if(mi_socket==0){
-		cout<<"Error creando el socket"<<endl;
-	}
-	struct sockaddr_in servidor_addr, my_addr;
-	servidor_addr.sin_family = AF_INET;
-	servidor_addr.sin_addr.s_addr = inet_addr("179.0.132.58"); 
-	servidor_addr.sin_port = htons(80);
-	if(connect(mi_socket, (struct sockaddr *)&servidor_addr, (socklen_t)sizeof(servidor_addr))<0){
-		cout<<"\nError funcion Connect"<<endl;
-		exit(1);
-	}
-	socklen_t len = sizeof(my_addr);
-	getsockname(mi_socket, (struct sockaddr *) &my_addr, &len);
-	inet_ntop(AF_INET, &my_addr.sin_addr, respuesta, 40); 
-	close(mi_socket);  
-	return;
+long double f (long int n){
+    return 2*n + 1;
 }
 
-int main () {
-	char ip[20], name[100];
-	int rank, size, length;
+long double ln (long double x){
+    timeval time1,time2;
+    long double result = 0, n = 0;
 
+    //Comienza el conteo del tiempo
+    gettimeofday(&time1, NULL);
+
+    //Serie de taylor:
+    while (n < 10000000){
+        //Calcula la parte 2*n + 1
+        long double fn = f(n);
+        //Realiza el calculo interno de la serie
+        result += (1 / fn) * pow((x - 1)/(x + 1), fn);
+        //Pasa al siguiente termino
+        n++;
+    }
+    //Termina el calculo
+    result = 2 * result;
+
+    //Termina el conteo del tiempo
+    gettimeofday(&time2, NULL);
+
+    //Muestra el tiempo de ejecucion
+    cout << "Tiempo de ejecucion: " << double(time2.tv_sec - time1.tv_sec) + double(time2.tv_usec - time1.tv_usec)/1000000 << endl;
+
+    //Retorna el valor
+    return result;
+}
+
+
+int main (int argc, char** argv) {
+	int rank, size, total;
 
 	//init mpi
 	if(MPI_Init(NULL, NULL)!=MPI_SUCCESS){
@@ -39,18 +48,20 @@ int main () {
 		exit(1);
 	}
 
-	//get rank, size, ip and processor name
+	//get rank
 	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
-	MPI_Comm_size(MPI_COMM_WORLD,&size);
-	MPI_Get_processor_name(name,&length);
-	obtener_IP(ip);
-	
-	//getName
-	cout << "Hola Mundo! soy el proceso " << rank << " de " << size << " corriendo en la máquina " << name <<" IP = " << ip << endl;
+    MPI_Comm_size(MPI_COMM_WORLD,&size);
 
+    MPI_Scatter(&total, 1, MPI_LONG_DOUBLE, void*recvbuf, int recvcount, MPI_Datatype recvtype, int root, MPI_Comm comm);
+
+
+    //end mpi
 	if(MPI_Finalize()!=MPI_SUCCESS){
 		cout<<"Error finalizando MPI"<<endl;
 		exit(1);
 	}
-	return 0;
+
+    //Muestro resultados
+    cout << setprecision(15) << ln(1500000, false) << endl;
+    return 0;
 }
