@@ -21,7 +21,7 @@ long double ln (int n){
 }
 
 
-int main (int argc, char** argv) {
+int main () {
     timeval time1,time2;
 	int rank, size;
     //Cantidad de terminos a calcular
