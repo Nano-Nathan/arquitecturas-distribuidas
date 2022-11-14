@@ -42,6 +42,9 @@ int main () {
     //Datos recibidos
     int receive[2];
     
+    //Comienza el conteo del tiempo
+    gettimeofday(&time1, NULL);
+    
     if (rank == 0){
         //Cantidad de terminos que le toca a cada proceso
         int count_items = items / size;
@@ -69,8 +72,7 @@ int main () {
 
     long double current_result = 0;
     long double result[size];
-    //Comienza el conteo del tiempo
-    gettimeofday(&time1, NULL);
+
     //Calcula los terminos
     for (int i = receive[0]; i < receive[1]; i++){
         current_result += ln(i);
