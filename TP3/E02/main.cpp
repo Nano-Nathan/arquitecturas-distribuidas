@@ -37,6 +37,8 @@ int main () {
     int receive[2];
     //Datos a enviar por el broadcast
     string text, patterns[count_patterns];
+    //Comienza el conteo del tiempo
+    gettimeofday(&time1, NULL);
     if (rank == 0){
         //Cantidad de terminos que le toca a cada proceso
         int count_items = count_patterns / size;
@@ -75,8 +77,6 @@ int main () {
     MPI_Bcast(&text, 1, MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Bcast(patterns, count_patterns, MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Scatter(sender, 2, MPI_INT, receive, 2, MPI_INT, 0, MPI_COMM_WORLD);
-    //Comienza el conteo del tiempo
-    gettimeofday(&time1, NULL);
     //Resultados
     string message_result;
     for (int i = receive[0]; i < receive[1]; i++){
