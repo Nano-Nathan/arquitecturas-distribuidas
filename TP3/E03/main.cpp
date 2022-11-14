@@ -26,7 +26,7 @@ int main () {
     int n;
     
     if (rank == 0){
-        cout << "Ingrese el tamaño de la matriz"
+        cout << "Ingrese el tamaño de la matriz";
         cin >> n;
 
         //Cantidad de terminos que le toca a cada proceso
@@ -47,6 +47,10 @@ int main () {
             start = end;
             end += count_items;
         }
+        for (int i = 0; i < (2 * size); i++){
+            cout << 
+        }
+        
     }
 
     //Se esparcen los datos
@@ -103,9 +107,18 @@ int main () {
         //Muestra los resultados
         cout << "Sumatoria: " << global_sum << endl;
         //Matriz resultado
-        cout << "Matriz resultado: " << endl;
-        cout << "| " << global_result[0][0] << " ... " << global_result[0][n - 1] << " |" << endl;
-        cout << "| " << global_result[n - 1][0] << " ... " << global_result[n - 1][n - 1] << " |" << endl;
+        //cout << "Matriz resultado: " << endl;
+        //cout << "| " << global_result[0][0] << " ... " << global_result[0][n - 1] << " |" << endl;
+        //cout << "| " << global_result[n - 1][0] << " ... " << global_result[n - 1][n - 1] << " |" << endl;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                cout << global_result[i][j] << " ";
+            }
+            cout << endl;
+        }
+        
     }
 
     //end mpi
