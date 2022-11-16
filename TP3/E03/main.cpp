@@ -26,7 +26,7 @@ int main () {
     int n;
     
     if (rank == 0){
-        cout << "Ingrese el tamaño de la matriz";
+        cout << endl << "Ingrese el tamaño de la matriz: ";
         cin >> n;
 
         //Cantidad de terminos que le toca a cada proceso
@@ -47,16 +47,11 @@ int main () {
             start = end;
             end += count_items;
         }
-        for (int i = 0; i < (2 * size); i++){
-            cout << 
-        }
-        
     }
 
     //Se esparcen los datos
     MPI_Bcast(&n, 1, MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Scatter(sender, 2, MPI_INT, receive, 2, MPI_INT, 0, MPI_COMM_WORLD);
-
     //Genera las matrices que le corresponde
     int idx = receive[1] - receive[0];
     float matriz_1[n][n];
@@ -74,7 +69,8 @@ int main () {
     }
 
     //Realiza el calculo
-    float current_sum, partial_sum = 0;
+    float current_sum, partial_sum;
+    partial_sum = 0;
     //Recorro las columnas de la matriz 2 y resultado
     for (int i = 0; i < idx; i++){
         //Recorro las filas de la matriz 1 y resultado
@@ -91,33 +87,63 @@ int main () {
             partial_sum += current_sum;
         }
     }
-
+    if(rank == -1){
+        cout << "Matriz 1: " << endl;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                cout << matriz_1[i][j] << " ";
+            }
+            cout << endl;
+        }
+        cout << "Matriz 2: " << endl;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < idx; j++)
+            {
+                cout << matriz_2[i][j] << " ";
+            }
+            cout << endl;
+        }
+        cout << "Matriz resultado: " << endl;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < idx; j++)
+            {
+                cout << local_result[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+    cout << "sum local: " << partial_sum << endl;
+    
     //Se reunen los resultados
     float sum_per_processor[size];
     float global_result[n][n];
     MPI_Gather(&partial_sum, 1, MPI_FLOAT, sum_per_processor, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
     MPI_Gather(local_result, n * idx, MPI_FLOAT, global_result, n * n, MPI_FLOAT, 0, MPI_COMM_WORLD);
-
     if(rank == 0){
         float global_sum = 0;
         //Suma los elementos de la matriz
         for (int i = 0; i < size; i++){
+            cout << "sum: " << sum_per_processor[i] << endl;
             global_sum += sum_per_processor[i];
         }
         //Muestra los resultados
-        cout << "Sumatoria: " << global_sum << endl;
+        //cout << "Sumatoria: " << global_sum << endl;
         //Matriz resultado
         //cout << "Matriz resultado: " << endl;
         //cout << "| " << global_result[0][0] << " ... " << global_result[0][n - 1] << " |" << endl;
         //cout << "| " << global_result[n - 1][0] << " ... " << global_result[n - 1][n - 1] << " |" << endl;
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                cout << global_result[i][j] << " ";
-            }
-            cout << endl;
-        }
+        //for (int i = 0; i < n; i++)
+        //{
+        //    for (int j = 0; j < n; j++)
+        //    {
+        //        cout << global_result[i][j] << " ";
+        //    }
+        //    cout << endl;
+        //}
         
     }
 
