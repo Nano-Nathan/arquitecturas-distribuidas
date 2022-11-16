@@ -54,27 +54,26 @@ int main () {
     MPI_Scatter(sender, 2, MPI_INT, receive, 2, MPI_INT, 0, MPI_COMM_WORLD);
     //Genera las matrices que le corresponde
     int idx = receive[1] - receive[0];
-    float matriz_1[n][n];
-    float matriz_2[n][idx];
-    float local_result[n][idx];
+    float matriz_1[idx][n];
+    float matriz_2[n][n];
+    float local_result[idx][n];
 
     //Completa las matrices
     for (int i = 0; i < n; i++){
         for (int j = 0; j < n; j++){
-            matriz_1[i][j] = 0.1;
+            matriz_2[i][j] = 0.2;
             if(j < idx){
-                matriz_2[i][j] = 0.2;
+                matriz_1[j][i] = 0.1;
             }
         }
     }
 
     //Realiza el calculo
-    float current_sum, partial_sum;
-    partial_sum = 0;
+    float current_sum, partial_sum = 0;
     //Recorro las columnas de la matriz 2 y resultado
-    for (int i = 0; i < idx; i++){
+    for (int i = 0; i < n; i++){
         //Recorro las filas de la matriz 1 y resultado
-        for (int j = 0; j < n; j++){
+        for (int j = 0; j < idx; j++){
             current_sum = 0;
             //Recorro las columnas de la matriz 1 y filas de la matriz 2
             for (int k = 0; k < n; k++){
@@ -87,53 +86,53 @@ int main () {
             partial_sum += current_sum;
         }
     }
-    if(rank == -1){
-        cout << "Matriz 1: " << endl;
-        for (int i = 0; i < n; i++)
+
+    //Mapea la matriz resultado
+    int j = 0,
+        k = 0,
+        idx_map = 0,
+        total = n * idx;
+    float map_local_result[total];
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < idx; j++)
         {
-            for (int j = 0; j < n; j++)
-            {
-                cout << matriz_1[i][j] << " ";
-            }
-            cout << endl;
-        }
-        cout << "Matriz 2: " << endl;
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < idx; j++)
-            {
-                cout << matriz_2[i][j] << " ";
-            }
-            cout << endl;
-        }
-        cout << "Matriz resultado: " << endl;
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < idx; j++)
-            {
-                cout << local_result[i][j] << " ";
-            }
-            cout << endl;
+            idx_map = (i * idx) + j;
+            map_local_result[idx_map] = local_result[j][i];
         }
     }
-    cout << endl  << partial_sum << endl;
     
     //Se reunen los resultados
     float sum_per_processor[size];
-    float global_result[n][n];
     MPI_Gather(&partial_sum, 1, MPI_FLOAT, sum_per_processor, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
-    MPI_Gather(local_result, n * idx, MPI_FLOAT, global_result, n * n, MPI_FLOAT, 0, MPI_COMM_WORLD);
+
     if(rank == 0){
         float global_sum = 0;
         //Suma los elementos de la matriz
         for (int i = 0; i < size; i++){
-            cout << "sum: " << sum_per_processor[i] << endl;
             global_sum += sum_per_processor[i];
         }
         //Muestra los resultados
-        //cout << "Sumatoria: " << global_sum << endl;
+        cout << "Sumatoria: " << global_sum << endl;    
+    }
+    float global_result[n * n];
+    MPI_Gather(map_local_result, total, MPI_FLOAT, global_result, n * n, MPI_FLOAT, 0, MPI_COMM_WORLD);
+
+    if (rank == 0) { 
+        //Mapea la matriz resultado
+        float final_result[n][n];
+        int idx_map = 0;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                idx_map = (i * n) + j;
+                final_result[i][j] = global_result[idx_map];
+            }
+        }
+        
         //Matriz resultado
-        //cout << "Matriz resultado: " << endl;
+        cout << "Matriz resultado: " << endl;
         //cout << "| " << global_result[0][0] << " ... " << global_result[0][n - 1] << " |" << endl;
         //cout << "| " << global_result[n - 1][0] << " ... " << global_result[n - 1][n - 1] << " |" << endl;
         //for (int i = 0; i < n; i++)
@@ -144,7 +143,12 @@ int main () {
         //    }
         //    cout << endl;
         //}
-        
+        cout << sizeof(global_result) << endl;
+        for (int j = 0; j < n * n; j++)
+        {
+            cout << global_result[j] << " ";
+        }
+        cout << endl;
     }
 
     //end mpi
