@@ -116,7 +116,7 @@ int main () {
             cout << endl;
         }
     }
-    cout << "sum local: " << partial_sum << endl;
+    cout << endl  << partial_sum << endl;
     
     //Se reunen los resultados
     float sum_per_processor[size];
