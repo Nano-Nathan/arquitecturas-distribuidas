@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sys/time.h>
 #include <mpi.h>
+
 using namespace std;
 
 int main () {

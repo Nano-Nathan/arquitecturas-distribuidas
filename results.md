@@ -1,83 +1,83 @@
 ## E01
-Tiempo de ejecucion para el proceso 0: 0.188900
+Tiempo de ejecucion para el proceso 0.188900
 
-Tiempo de ejecucion para el proceso 32: 0.126079
+Tiempo de ejecucion para el proceso 0.126079
 
-Tiempo de ejecucion para el proceso 8: 0.129414
-Tiempo de ejecucion para el proceso 4: 0.137751
-
-
-Tiempo de ejecucion para el proceso 16: 0.347214
-
-Tiempo de ejecucion para el proceso 2: 0.144932
-
-Tiempo de ejecucion para el proceso 1: 0.365048
-
-Tiempo de ejecucion para el proceso 34: 0.134294
-
-Tiempo de ejecucion para el proceso 33: 0.134006
-
-Tiempo de ejecucion para el proceso 17: 0.133076
-
-Tiempo de ejecucion para el proceso 36: 0.482890
-Tiempo de ejecucion para el proceso 12: 0.138079
+Tiempo de ejecucion para el proceso 0.129414
+Tiempo de ejecucion para el proceso 0.137751
 
 
-Tiempo de ejecucion para el proceso 3: 0.137664
+Tiempo de ejecucion para el proceso 0.347214
 
-Tiempo de ejecucion para el proceso 18: 0.148446
+Tiempo de ejecucion para el proceso 0.144932
 
-Tiempo de ejecucion para el proceso 24: 0.155221
+Tiempo de ejecucion para el proceso 0.365048
 
-Tiempo de ejecucion para el proceso 6: 0.528874
+Tiempo de ejecucion para el proceso 0.134294
+
+Tiempo de ejecucion para el proceso 0.134006
+
+Tiempo de ejecucion para el proceso 0.133076
+
+Tiempo de ejecucion para el proceso 0.482890
+Tiempo de ejecucion para el proceso 0.138079
+
+
+Tiempo de ejecucion para el proceso 0.137664
+
+Tiempo de ejecucion para el proceso 0.148446
+
+Tiempo de ejecucion para el proceso 0.155221
+
+Tiempo de ejecucion para el proceso 0.528874
 
 Tiempo de ejecucion para el proceso 9: 0.176047
 
-Tiempo de ejecucion para el proceso 35: 0.070366
-Tiempo de ejecucion para el proceso 10: 0.191419
+Tiempo de ejecucion para el proceso 0.070366
+Tiempo de ejecucion para el proceso 0.191419
 
 
-Tiempo de ejecucion para el proceso 20: 0.195273
+Tiempo de ejecucion para el proceso 0.195273
 
-Tiempo de ejecucion para el proceso 5: 0.194230
+Tiempo de ejecucion para el proceso 0.194230
 
-Tiempo de ejecucion para el proceso 13: 0.130427
-Tiempo de ejecucion para el proceso 19: 0.138482
-Tiempo de ejecucion para el proceso 28: 0.131409
+Tiempo de ejecucion para el proceso 0.130427
+Tiempo de ejecucion para el proceso 0.138482
+Tiempo de ejecucion para el proceso 0.131409
 
-Tiempo de ejecucion para el proceso 38: 0.140255
-
-
-
-Tiempo de ejecucion para el proceso 37: 0.161416
-
-Tiempo de ejecucion para el proceso 26: 0.665664
-Tiempo de ejecucion para el proceso 7: 0.140969
+Tiempo de ejecucion para el proceso 0.140255
 
 
-Tiempo de ejecucion para el proceso 25: 0.159834
 
-Tiempo de ejecucion para el proceso 22: 0.142218
+Tiempo de ejecucion para el proceso 0.161416
 
-Tiempo de ejecucion para el proceso 14: 0.200677
-
-Tiempo de ejecucion para el proceso 21: 0.712623
-
-Tiempo de ejecucion para el proceso 11: 0.711572
-
-Tiempo de ejecucion para el proceso 39: 0.138511
-Tiempo de ejecucion para el proceso 30: 0.146949
+Tiempo de ejecucion para el proceso 0.665664
+Tiempo de ejecucion para el proceso 0.140969
 
 
-Tiempo de ejecucion para el proceso 27: 0.134280
+Tiempo de ejecucion para el proceso 0.159834
 
-Tiempo de ejecucion para el proceso 29: 0.176588
+Tiempo de ejecucion para el proceso 0.142218
 
-Tiempo de ejecucion para el proceso 23: 0.140820
+Tiempo de ejecucion para el proceso 0.200677
 
-Tiempo de ejecucion para el proceso 15: 0.145397
+Tiempo de ejecucion para el proceso 0.712623
 
-Tiempo de ejecucion para el proceso 31: 0.923274
+Tiempo de ejecucion para el proceso 0.711572
+
+Tiempo de ejecucion para el proceso 0.138511
+Tiempo de ejecucion para el proceso 0.146949
+
+
+Tiempo de ejecucion para el proceso 0.134280
+
+Tiempo de ejecucion para el proceso 0.176588
+
+Tiempo de ejecucion para el proceso 0.140820
+
+Tiempo de ejecucion para el proceso 0.145397
+
+Tiempo de ejecucion para el proceso 0.923274
 
 
 ## E02
